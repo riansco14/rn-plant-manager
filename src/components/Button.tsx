@@ -1,6 +1,7 @@
 import React from 'react'
-import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform, TouchableOpacityProps } from 'react-native'
+import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform, TouchableOpacityProps, Dimensions } from 'react-native'
 import colors from '../../styles/colors'
+import fonts from '../../styles/fonts'
 
 import waterImage from '../assets/watering.png'
 
@@ -24,11 +25,12 @@ const style = StyleSheet.create({
         marginBottom: 20,
         borderRadius: 16,
         height: 56,
-        padding: 20
+       
     },
     buttonText: {
         color: colors.white,
-        fontSize: 22,
+        fontFamily: fonts.text,
+        fontSize: 17,
         alignSelf: 'center'
 
     }

@@ -1,28 +1,30 @@
-import React, { useState } from 'react'
-import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform } from 'react-native'
-import colors from '../../styles/colors'
+import React from 'react'
+import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform, Dimensions } from 'react-native'
+import {Feather} from '@expo/vector-icons'
 
+import colors from '../../styles/colors'
+import fonts from '../../styles/fonts'
 import waterImage from '../assets/watering.png'
-import { Button } from '../components/Button'
+import { useNavigation } from '@react-navigation/core'
 
 
 export function Welcome() {
-    const [visible, setVisible] = useState(true)
+    const navigation = useNavigation()
 
-    function handleVisible() {
-        setVisible(!visible)
+    function handleStart() {
+        navigation.navigate('UserIdentification')
     }
 
     return (<SafeAreaView style={style.container}>
+        <View style={style.wrapper}>
+        
         <Text style={style.title}>
             Gerencie {'\n'}
-            suas plantas de forma fácil
+            suas plantas {'\n'}
+            de forma fácil
         </Text>
 
-        {
-            visible &&
-            <Image source={waterImage} style={style.image} />
-        }
+        <Image source={waterImage} style={style.image} resizeMode='contain'/>
 
 
         <Text style={style.subtitle}>
@@ -30,34 +32,43 @@ export function Welcome() {
             sempre que precisar.
         </Text>
 
-        <Button title=">" onPress={handleVisible}>
-        </Button>
+        <TouchableOpacity style={style.button} activeOpacity={0.8} onPress={handleStart}>
+            <Feather name="chevron-right" style={style.buttonIcon}/>
+        </TouchableOpacity>
+            
+        </View>
     </SafeAreaView>)
 }
 
 const style = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        
         paddingTop: Platform.OS === 'android' ? 25 : 0,
 
     },
+    wrapper: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        paddingHorizontal: 20
+
+    },
     title: {
-        fontSize: 32,
-        fontWeight: 'bold',
+        fontFamily: fonts.heading,
+        fontSize: 28,
         textAlign: 'center',
         color: colors.heading,
-        marginTop: 38
+        marginTop: 38,
+        lineHeight: 34
     },
     image: {
-        width: 292,
-        height: 284
+        width: Dimensions.get('window').width * 0.7
     },
     subtitle: {
+        fontFamily: fonts.text,
         textAlign: 'center',
-        fontSize: 17,
-        justifyContent: 'center',
+        fontSize: 18,
         paddingHorizontal: 20,
         color: colors.heading
     },
@@ -70,10 +81,9 @@ const style = StyleSheet.create({
         height: 56,
         width: 56,
     },
-    buttonText: {
+    buttonIcon: {
         color: colors.white,
-        fontSize: 22,
-        alignSelf: 'center'
+        fontSize: 24
 
     }
 
