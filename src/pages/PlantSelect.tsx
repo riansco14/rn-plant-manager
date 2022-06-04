@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -10,6 +11,7 @@ import { EnviromentButton } from '../components/EnviromentButton'
 import { Header } from '../components/Header'
 import {Load} from '../components/Load'
 import { PlantCardPrimary } from '../components/PlantCardPrimary'
+import { PlantProps } from '../libs/storage'
 
 
 import api from '../services/api'
@@ -19,18 +21,6 @@ interface EnviromentProps {
     title: string
 }
 
-interface PlantProps {
-    id: string,
-    name: string,
-    about: string,
-    water_tips: string,
-    photo: string,
-    environments: [string],
-    frequency: {
-        times: number,
-        repeat_every: string
-    },
-}
 
 export function PlantSelect() {
     const [loading, setLoading] = useState(true)
@@ -41,7 +31,8 @@ export function PlantSelect() {
 
     const [page, setPage] = useState(1)
     const [loadingMore, setLoadingMore] = useState(false)
-    const [loadedAll, setLoadedAll] = useState(false)
+
+    const navigation = useNavigation()
 
 
     async function fetchEnviroment() {
@@ -110,6 +101,10 @@ export function PlantSelect() {
         setPlantsFiltered(newArr)
     }
 
+    function handlePlantSelect(plant : PlantProps) {
+        navigation.navigate("PlantSave", {plant})
+    }
+
 
     
     return (
@@ -123,11 +118,17 @@ export function PlantSelect() {
                     você quer colocar a sua planta ?
                     </Text>
                 <View>
-                    <FlatList contentContainerStyle={style.flatListEnviroment} data={[{ key: 'all', title: 'Todos' }, ...enviroments]} renderItem={({ item }) => (<EnviromentButton title={item.title} active={item.key === enviromentSelected} onPress={() => handleFiltered(item)} />)} horizontal showsHorizontalScrollIndicator={false}></FlatList>
+                    <FlatList contentContainerStyle={style.flatListEnviroment}
+                        data={[{ key: 'all', title: 'Todos' }, ...enviroments]}
+                       // keyExtractor={(item)=>String(item.key)}
+                        renderItem={({ item }) => (<EnviromentButton title={item.title}
+                        active={item.key === enviromentSelected} onPress={() => handleFiltered(item)} />)} horizontal showsHorizontalScrollIndicator={false}></FlatList>
                 </View>
                 <View style={style.plants}>
-                    <FlatList data={plantsFiltered}
-                        renderItem={({ item }) => (<PlantCardPrimary data={item} />)}
+                    <FlatList
+                        data={plantsFiltered}
+                        //keyExtractor={(item)=>String(item.key)}
+                        renderItem={({ item }) => (<PlantCardPrimary data={item} onPress={()=>handlePlantSelect(item)} />)}
                         numColumns={2}
                         onEndReachedThreshold={0.1}
                         onEndReached={({distanceFromEnd})=>{handleFetchMore(distanceFromEnd)}}
